@@ -4,21 +4,23 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.pickers import MDDatePicker
 from datetime import datetime
 
+
 class DialogContent(MDBoxLayout):
     # Init function for class constructor
     def __init__(self, **kwargs):
-         super().__inti__(**kwargs)
-         self.ids.date_text = datetime.now().strftime("%A %d %B %Y")
+        super().__inti__(**kwargs)
+        self.ids.date_text = datetime.now().strftime("%A %d %B %Y")
 
     # Function to show date picker
     def show_date_picker(self):
         date_dialog = MDDatePicker()
-        date.dialog.bind(on_save = self.on_save)
+        date.dialog.bind(on_save=self.on_save)
 
     # Function to get and save date
-    def on_save(self,instance,value,date_range):
+    def on_save(self, instance, value, date_range):
         date = value.strftime("%A %d %B %Y")
         self.ids.date_text.text = str(date)
+
 
 # Main app class
 class MainApp(MDApp):
@@ -36,5 +38,15 @@ class MainApp(MDApp):
                 type="custom",
                 content_cls=DialogContent(),
             )
+            self.task_list_dialog.open()
+
+    # Function to add new task
+    def add_task(self, task, task_date):
+        print(task.text, task_date)
+
+    # Function to close dialog
+    def close_dialog(self, **kwargs):
+        self.task_list_dialog.dismiss()
+
 
 MainApp().run()
