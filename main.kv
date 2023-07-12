@@ -18,7 +18,7 @@ MDFloatLayout:
         pos_hint: {"x": 0.45, "y": 0.04}
 
 <DialogContent>:
-    orientation: "verticle"
+    orientation: "vertical"
     spacing: "10dp"
     size_hint: 1, None
     height: "130dp"
@@ -31,7 +31,7 @@ MDFloatLayout:
             hint_text: "Add new task"
             pos_hint: {"center_y": 0.4}
             max_text_length: 50
-            on_text_validate: (app.add_task(task_text, date_text.text), app.close_dialog())
+            on_text_validate: (app.add_task(task_text,date_text.text),app.close_dialog())
 
         MDIconButton:
             icon: "calendar"
@@ -40,7 +40,15 @@ MDFloatLayout:
 
     MDLabel:
         spacing: "10dp"
-        id: "date_text"
+        id: date_text
 
     BoxLayout:
         orientation: "horizontal"
+
+        MDRaisedButton:
+            text: "SAVE"
+            on_release: (app.add_task(task_text,date_text.text),app.close_dialog())
+
+        MDFlatButton:
+            text: "CANCEL"
+            on_release: app.close_dialog()

@@ -8,13 +8,14 @@ from datetime import datetime
 class DialogContent(MDBoxLayout):
     # Init function for class constructor
     def __init__(self, **kwargs):
-        super().__inti__(**kwargs)
-        self.ids.date_text = datetime.now().strftime("%A %d %B %Y")
+        super().__init__(**kwargs)
+        self.ids.date_text.text = str(datetime.now().strftime("%A %d %B %Y"))
 
     # Function to show date picker
     def show_date_picker(self):
         date_dialog = MDDatePicker()
-        date.dialog.bind(on_save=self.on_save)
+        date_dialog.bind(on_save=self.on_save)
+        date_dialog.open()
 
     # Function to get and save date
     def on_save(self, instance, value, date_range):
@@ -31,22 +32,23 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = "Red"
 
     # Function to show tasks
-    def show_tasks(self):
+    def show_task_dialog(self):
         if not self.task_list_dialog:
             self.task_list_dialog = MDDialog(
                 title="Create new task",
                 type="custom",
                 content_cls=DialogContent(),
             )
-            self.task_list_dialog.open()
+        self.task_list_dialog.open()
 
     # Function to add new task
     def add_task(self, task, task_date):
         print(task.text, task_date)
 
     # Function to close dialog
-    def close_dialog(self, **kwargs):
+    def close_dialog(self, *args):
         self.task_list_dialog.dismiss()
 
-
-MainApp().run()
+if __name__ == "__main__":
+    app = MainApp()
+    app.run()
