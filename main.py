@@ -2,6 +2,8 @@ from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.pickers import MDDatePicker
+from kivymd.uix.list import TwoLineAvatarIconListItem, ILeftBody
+from kivymd.uix.selectioncontrol import MDCheckbox
 from datetime import datetime
 
 
@@ -22,6 +24,25 @@ class DialogContent(MDBoxLayout):
         date = value.strftime("%A %d %B %Y")
         self.ids.date_text.text = str(date)
 
+
+# Class for checking and deleting tasks
+class ListItemCheckbox(TwoLineAvatarIconListItem):
+    def __init__(self, pk=None, **kwargs):
+        super().__init__(**kwargs)
+        self.pk = pk
+
+    # Function for marking tasks complete
+    def task_checked(self,check,list_item):
+        if check.active == True:
+            list_item.text = '[s]' + list_item.text + '[/s]'
+        else:
+            pass
+
+    def task_delete(self,list_item):
+        self.parent.remove_widget(list_item)
+
+class LeftCheckbox(ILeftBody,MDCheckbox):
+    pass
 
 # Main app class
 class MainApp(MDApp):
