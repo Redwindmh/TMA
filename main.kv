@@ -52,3 +52,17 @@ MDFloatLayout:
         MDFlatButton:
             text: "CANCEL"
             on_release: app.close_dialog()
+
+<ListItemCheckbox>
+    id: list_item
+    markup: True
+
+    LeftCheckbox:
+        id: check
+        on_release: root.task_checked(check, list_item)
+
+    IconRightWidget:
+        icon: "trash-can-outline"
+        theme_text_color: "Custom"
+        text_color: "red"
+        on_release: root.task_delete(list_item)

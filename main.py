@@ -38,6 +38,7 @@ class ListItemCheckbox(TwoLineAvatarIconListItem):
         else:
             pass
 
+    # Function for deleting task
     def task_delete(self,list_item):
         self.parent.remove_widget(list_item)
 
@@ -65,6 +66,8 @@ class MainApp(MDApp):
     # Function to add new task
     def add_task(self, task, task_date):
         print(task.text, task_date)
+        self.root.ids['container'].add_widget(ListItemCheckbox(text = '[b]' + task.text + '[/b]', secondary_text = task_date))
+        task.text = ''
 
     # Function to close dialog
     def close_dialog(self, *args):
