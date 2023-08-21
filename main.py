@@ -5,7 +5,9 @@ from kivymd.uix.pickers import MDDatePicker
 from kivymd.uix.list import TwoLineAvatarIconListItem, ILeftBody
 from kivymd.uix.selectioncontrol import MDCheckbox
 from datetime import datetime
+from database import Database
 
+db = Database()
 
 class DialogContent(MDBoxLayout):
     # Init function for class constructor
@@ -35,12 +37,14 @@ class ListItemCheckbox(TwoLineAvatarIconListItem):
     def task_checked(self,check,list_item):
         if check.active == True:
             list_item.text = '[s]' + list_item.text + '[/s]'
+            db.mark_task_completed(list_item.pk)
         else:
-            pass
+            list_item.text = str(db.mark_task_incompleted(list_item.pk))
 
     # Function for deleting task
     def task_delete(self,list_item):
         self.parent.remove_widget(list_item)
+        db.delete_task(list_item.pk)
 
 class LeftCheckbox(ILeftBody,MDCheckbox):
     pass
@@ -65,13 +69,29 @@ class MainApp(MDApp):
 
     # Function to add new task
     def add_task(self, task, task_date):
-        print(task.text, task_date)
-        self.root.ids['container'].add_widget(ListItemCheckbox(text = '[b]' + task.text + '[/b]', secondary_text = task_date))
+        created_task = db.create_task(task.text, task_date)
+        self.root.ids['container'].add_widget(ListItemCheckbox(pk = created_task[0],  text = '[b]' + created_task[1] + '[/b]', secondary_text = created_task[2]))
         task.text = ''
 
     # Function to close dialog
     def close_dialog(self, *args):
         self.task_list_dialog.dismiss()
+
+    # Function to add task to list widget
+    def on_start(self):
+        ''''Load saved tasks and add them to MDList widget'''
+        completed_tasks, incompleted_tasks = db.get_tasks()
+
+        if incompleted_tasks != []:
+            for task in incompleted_tasks:
+                add_task = ListItemCheckbox(pk = task[0], text = task[1], secondary_text = task[2])
+                self.root.ids.container.add_widget(add_task)
+
+        if completed_tasks != []:
+            for task in completed_tasks:
+                add_task = ListItemCheckbox(pk = task[0], text = "[s]" + task[1] + "[/s]", secondary_text = task[2])
+                add_task.ids.check.active = True
+                self.root.ids.container.add_widget(add_task)
 
 if __name__ == "__main__":
     app = MainApp()
